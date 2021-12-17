@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "847220033376",
+    "project_id": "the-guc-cc-app",
+    "storage_bucket": "the-guc-cc-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847220033376:android:628994850ecfeb48ed0005",
+        "android_client_info": {
+          "package_name": "com.example.the_guc_cc_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847220033376-2othboh147rtlholojhuamt5j6c1bcol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGmRyzg-iUA9_836NeaQxolzUnUwJhC7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847220033376-2othboh147rtlholojhuamt5j6c1bcol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
