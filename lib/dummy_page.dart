@@ -16,7 +16,7 @@ class Dummy extends StatelessWidget {
       ),
       drawer: MainDrawer(),
       body: Center(
-        child: Text('This page is to test the drawer b'),
+        child: Text('This page is to test the drawer c'),
       ),
     );
   }
