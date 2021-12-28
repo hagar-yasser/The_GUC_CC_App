@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import './drawer.dart';
 import 'dart:io';
-import './image_from_gallery.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'dart:async';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 
 class ViewProfile extends StatefulWidget {
@@ -32,14 +26,6 @@ class _ViewProfileState extends State<ViewProfile> {
       drawer: MainDrawer(),
       body: Container(
         alignment: Alignment.center,
-        // child: GestureDetector(
-        //    onTap: () async {
-        //     var source = ImageSource.gallery;
-        //     XFile image = await imagePicker.pickImage(
-        //         source: source,
-        //         imageQuality: 50,
-        //         preferredCameraDevice: CameraDevice.front);
-        //    },
         child: Column(
           children: [
             GestureDetector(
@@ -54,7 +40,7 @@ class _ViewProfileState extends State<ViewProfile> {
                     children: [
                       CircleAvatar(
                         backgroundImage:
-                            AssetImage("assets/images/Profile Image.png"),
+                            AssetImage(""),
                       ),
                       Positioned(
                           bottom: 0,

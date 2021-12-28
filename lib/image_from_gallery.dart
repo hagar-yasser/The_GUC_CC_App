@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 
 
@@ -37,8 +36,7 @@ class ImageFromGalleryState extends State<ImageFromGallery> {
               source: source,
               imageQuality: 50,
               preferredCameraDevice: CameraDevice.front);
-
-          final String path = (await getApplicationDocumentsDirectory()).path;    
+  
           setState(() {
             _image = File(image.path);
           });

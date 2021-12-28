@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import './image_from_gallery.dart';
 
 class MainDrawer extends StatelessWidget {
-  @override
   navigateToProfile(BuildContext myContext) {
     Navigator.of(myContext).pushNamed(
       '/profileRoute',
@@ -55,22 +53,8 @@ class MainDrawer extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage:
-                        AssetImage("assets/images/Profile Image.png"),
+                        AssetImage(""),
                   ),
-                  // Positioned(
-                  //     bottom: 0,
-                  //     right: -25,
-                  //     child: RawMaterialButton(
-                  //       onPressed: () {},
-                  //       elevation: 2.0,
-                  //       fillColor: Color(0xFFF5F6F9),
-                  //       child: Icon(
-                  //         Icons.camera_alt_outlined,
-                  //         color: Colors.blue,
-                  //       ),
-                  //       padding: EdgeInsets.all(15.0),
-                  //       shape: CircleBorder(),
-                  //     )),
                 ],
               ),
             ),
