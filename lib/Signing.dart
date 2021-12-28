@@ -53,7 +53,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
           child: Column(
             children: [
               Container(
-                height: 150,
+                height: 70,
                 child: Center(
                   child: Text(
                     "The GUC CC App",
@@ -108,7 +108,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.65,
                       child: TabBarView(
                         controller: _tabController,
                         children: [
