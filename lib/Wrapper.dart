@@ -43,13 +43,35 @@ class _WrapperState extends State<Wrapper> {
               //YOU WILL KNOW THE USER TYPE AND OTHER INFO SUCH AS THE SAVED POSTS IDS SUPPOSEDLY
               return Scaffold(
                   body: Center(
-                child: ElevatedButton(
-                  child: Text("Log Out"),
-                  onPressed: () {
-                    authProvider.signOut();
-                  },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                ElevatedButton(
+                    child: Text("Log Out"),
+                    onPressed: () {
+                      authProvider.signOut();
+                    },
                 ),
-              ));
+                ElevatedButton(
+                    child: Text("normal"),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/NormalPostForm");
+                    },
+                ),
+                ElevatedButton(
+                    child: Text("vote"),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/VotingPostForm");
+                    },
+                ),
+                ElevatedButton(
+                    child: Text("post card"),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/PostCard");
+                    },
+                ),
+              ]),
+                  ));
             } else {
               print("user from wrapper " + user.toString());
               return Signing();

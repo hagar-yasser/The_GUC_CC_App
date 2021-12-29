@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/Signing.dart';
 import 'package:the_guc_cc_app/Wrapper.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
+import 'AddNormalPostForm.dart';
+import 'AddVotingPost.dart';
+import 'PostCard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(routes: {
         Signing.routeName: (context) => Signing(),
+        //reem and donia
+        NormalPostForm.NormalPostFormRoute:(context)=> NormalPostForm(),
+        VotingPostForm.VotingPostFormRoute:(context)=> VotingPostForm(),
+        PostCard.PostCardRoute: (context) => PostCard()
       }, title: 'The GUC CC App', home: Wrapper()),
     );
   }
