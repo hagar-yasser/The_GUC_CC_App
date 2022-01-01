@@ -5,10 +5,16 @@ import 'package:the_guc_cc_app/objects/MyUser.dart';
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  String _token = "";
+  DateTime _expiryDate = DateTime.utc(1970);
+  String _userId = "";
+  String _name = "";
+  String _type = "";
   MyUser? convertFirbaseUser(User? user) {
     if (user == null) {
       return null;
     }
+
     return MyUser(user.email, user.displayName);
   }
 

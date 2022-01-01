@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/Signing.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'package:the_guc_cc_app/objects/MyUser.dart';
+import './drawer.dart';
 
 class Wrapper extends StatefulWidget {
   static const routeName = '/wrapper';
@@ -33,20 +34,25 @@ class _WrapperState extends State<Wrapper> {
           if (snapshot.connectionState == ConnectionState.active) {
             final MyUser? user = snapshot.data;
             if (user != null) {
-              print(user.email);
+              // print("trsttttesttt");
+              // print(user.name);
               //ADD HOME PAGE HERE YOU CAN ACCESS THE FULL USER PROFILE FROM THE DATABASE BY
               //GETTING THE USER AUTHENTICATION INFO FROM THE PROVIDER THEN
               //QUERY THE DATABASE FOR THE USER DOCUMENT THAT HAS THIS EMAIL WHERE
               //YOU WILL KNOW THE USER TYPE AND OTHER INFO SUCH AS THE SAVED POSTS IDS SUPPOSEDLY
               return Scaffold(
+                appBar: AppBar(
+        title: Text('Wrapper'),
+      ),
+                  drawer: MainDrawer(),
                   body: Center(
-                child: ElevatedButton(
-                  child: Text("Log Out"),
-                  onPressed: () {
-                    authProvider.signOut();
-                  },
-                ),
-              ));
+                    child: ElevatedButton(
+                      child: Text("Log Out"),
+                      onPressed: () {
+                        authProvider.signOut();
+                      },
+                    ),
+                  ));
             } else {
               print("user from wrapper " + user.toString());
               return Signing();
@@ -55,9 +61,10 @@ class _WrapperState extends State<Wrapper> {
           //WHILE LOADING
           print('circular from wrapper');
           return Scaffold(
+              drawer: MainDrawer(),
               body: Center(
-            child: CircularProgressIndicator(),
-          ));
+                child: CircularProgressIndicator(),
+              ));
         });
   }
 }
