@@ -14,7 +14,7 @@ class _MainDrawerState extends State<MainDrawer> {
     Navigator.of(myContext).pushNamed(
       '/profileRoute',
     );
-    // arguments: {'category': cat});
+    // arguments: {'category': cat};
   }
 
   navigateToSaved(BuildContext myContext) {
@@ -42,7 +42,11 @@ class _MainDrawerState extends State<MainDrawer> {
     final auth = Provider.of<Auth>(context);
     User? user = auth.getCurrentUser();
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
-
+    navigateToProfile(BuildContext myContext) {
+    Navigator.of(myContext).pushNamed(
+      '/profileRoute',
+     arguments: {'user': "${user!.uid}"});
+  }
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(user!.uid).get(),
       builder:
