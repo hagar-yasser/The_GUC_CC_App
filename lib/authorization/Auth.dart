@@ -52,7 +52,7 @@ class Auth {
     await firestore.collection(myNames.usersTable).doc(result.user!.uid).set({
       myNames.email: email,
       myNames.name: name,
-      myNames.savedPostsIDs: {},
+      myNames.savedPostsIDs: [], // Modified
       myNames.type: userType,
     });
 
