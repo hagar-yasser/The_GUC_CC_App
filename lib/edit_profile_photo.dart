@@ -1,3 +1,5 @@
+// ignore_for_file: argument_type_not_assignable_to_error_handler
+
 import 'package:flutter/material.dart';
 import './drawer.dart';
 import 'dart:io';
@@ -35,11 +37,12 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
     String url = "";
     Reference ref = storage.ref().child(path);
     UploadTask uploadTask = ref.putFile(_image1);
-    uploadTask.whenComplete(() {
+    uploadTask.whenComplete(() async {
       print("task completed");
-      url = ref.getDownloadURL() as String;
+      url = await ref.getDownloadURL();
       print("url");
       print(url);
+      getPic(path);
     }).catchError((onError) {
       print(onError);
     });
@@ -60,23 +63,20 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
     //String url2 = "";
     // var url;
     // var url2;
-    var file;
-    Reference ref = storage.ref().child(path);
-    // Reference ref2 = storage.ref().child("avatar.png");
-    url = await ref.getDownloadURL();
-    //  url2 = await ref2.getDownloadURL();
-    final name = ref.name;
-    // print("url");
-    // print(url);
-    // if (url == "") {
-    //   file = File(url2);
-    // } else {
-    file = File(url);
-    //  }
-    // setState(() {
-    //   _image = file;
-    //   URL = url;
-    // });
+    // var file;
+    try {
+      Reference ref = storage.ref().child(path);
+      url = await ref.getDownloadURL();
+      URL = url;
+      setState(() {
+        
+      });
+    } on Exception catch (e) {
+      url =
+          "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344";
+      URL = url;
+    }
+
     return url;
   }
 
@@ -90,7 +90,7 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           print("snapshot");
           print(snapshot);
-          print(snapshot.data);
+          // print(snapshot.error);
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
@@ -116,7 +116,7 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                     fit: StackFit.expand,
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(snapshot.data ??
+                        backgroundImage: NetworkImage(URL??
                             "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
                         //  backgroundImage: FileImage(_image ?? File("")),
                         // backgroundImage: FileImage(_image),
@@ -132,10 +132,12 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                                   source: source,
                                   imageQuality: 50,
                                   preferredCameraDevice: CameraDevice.front);
-                              uploadPic2(File(image.path), "${user.uid}");
-                              getPic("${user.uid}");
+                              await uploadPic2(File(image.path), "${user.uid}");
+                              setState(() {});
+                              await getPic("${user.uid}");
+                              String temp = await getPic("${user.uid}");
                               setState(() {
-                                _image = File(image.path);
+                                URL = temp;
                               });
                             },
                             elevation: 2.0,
@@ -160,6 +162,8 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
             // setState(() {
             //   _image = File(getPic("${user!.uid}") as String);
             // });
+            print("Done");
+            print(URL);
             return Container(
               alignment: Alignment.center,
               child: Container(
@@ -172,8 +176,7 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                     fit: StackFit.expand,
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(snapshot.data ??
-                            "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                        backgroundImage: NetworkImage(URL ),
                         //  backgroundImage: FileImage(_image ?? File("")),
                         // backgroundImage: FileImage(_image),
                       ),
@@ -188,11 +191,23 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                                   source: source,
                                   imageQuality: 50,
                                   preferredCameraDevice: CameraDevice.front);
-                              uploadPic2(File(image.path), "${user.uid}");
-                              //getPic("${user.uid}");
+                              print("before upload");
+                              await uploadPic2(File(image.path), "${user.uid}");
+                              print("after upload");
+                              print("before download");
+                              await getPic("${user.uid}");
+                              print("after download");
+                              String temp = await getPic("${user.uid}");
                               setState(() {
-                                _image = File(image.path);
+                                URL = temp;
                               });
+                              //  setState(() {
+                              //   URL = temp;
+                              // });
+                              // await getPic("${user.uid}");
+                              // setState(() {
+                              //   _image = File(image.path);
+                              // });
                             },
                             elevation: 2.0,
                             fillColor: Color(0xFFF5F6F9),

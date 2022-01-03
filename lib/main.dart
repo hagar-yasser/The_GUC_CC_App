@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         routes: {
           Signing.routeName: (context) => Signing(),
-          '/': (dummyCtx) => ViewProfile(),
+          '/': (dummyCtx) => Wrapper(),
           '/profileRoute': (dummyCtx) => ViewProfile(),
           '/savedRoute': (dummyCtx) => Saved(),
           '/myPostsRoute': (dummyCtx) => MyPosts(),

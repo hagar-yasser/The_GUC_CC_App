@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 class ProfilePhoto extends StatefulWidget {
   const ProfilePhoto({Key? key}) : super(key: key);
 
@@ -49,8 +50,13 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     print("getting picture");
     FirebaseStorage storage = FirebaseStorage.instance;
     String url = "";
-    Reference ref = storage.ref().child(path);
-    url = await ref.getDownloadURL();
+    try {
+      Reference ref = storage.ref().child(path);
+      url = await ref.getDownloadURL();
+    } on Exception catch (e) {
+      url =
+          "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344";
+    }
     return url;
   }
 
@@ -60,17 +66,35 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     return FutureBuilder<String>(
         future: getPic("${user!.uid}"),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          // print("snapshot");
-          // print(snapshot);
+          print("photo");
+          print("snapshot");
+          print(snapshot);
           // print(snapshot.data);
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-             return Center(
-            child: CircularProgressIndicator(),
-          );
-           
+            return Container(
+              alignment: Alignment.center,
+              child: Container(
+                padding: EdgeInsets.all(20),
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    fit: StackFit.expand,
+                    children: [
+                      CircleAvatar(
+                        // backgroundImage: NetworkImage(
+                        //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
@@ -87,10 +111,8 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                     fit: StackFit.expand,
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(snapshot.data ??
-                            "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                        backgroundImage: NetworkImage(data),
                       ),
-                     
                     ],
                   ),
                 ),
@@ -98,8 +120,26 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
             );
           }
 
-          return Center(
-            child: CircularProgressIndicator(),
+          return Container(
+            alignment: Alignment.center,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: SizedBox(
+                height: 100,
+                width: 100,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  fit: StackFit.expand,
+                  children: [
+                    CircleAvatar(
+                      // backgroundImage: NetworkImage(
+                      //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                      backgroundImage: AssetImage('assets/images/avatar.png'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         });
   }

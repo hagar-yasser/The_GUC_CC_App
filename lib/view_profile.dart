@@ -98,7 +98,7 @@ class _ViewProfileState extends State<ViewProfile> {
             ),
             drawer: MainDrawer(),
             body: Container(
-              alignment: Alignment.center,
+              alignment: Alignment.topLeft,
               child: Column(
                 children: [
                   EditProfilePhoto(),
