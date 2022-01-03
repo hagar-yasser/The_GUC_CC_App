@@ -1,8 +1,12 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:the_guc_cc_app/view_profile.dart';
+import './profile_photo.dart';
 
 class MainDrawer extends StatefulWidget {
   @override
@@ -43,10 +47,10 @@ class _MainDrawerState extends State<MainDrawer> {
     User? user = auth.getCurrentUser();
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
     navigateToProfile(BuildContext myContext) {
-    Navigator.of(myContext).pushNamed(
-      '/profileRoute',
-     arguments: {'user': "${user!.uid}"});
-  }
+      Navigator.of(myContext)
+          .pushNamed('/profileRoute', arguments: {'user': "${user!.uid}"});
+    }
+
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(user!.uid).get(),
       builder:
@@ -58,6 +62,13 @@ class _MainDrawerState extends State<MainDrawer> {
         if (snapshot.hasData && !snapshot.data!.exists) {
           return Text("Document does not exist");
         }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Drawer(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
 
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
@@ -66,7 +77,7 @@ class _MainDrawerState extends State<MainDrawer> {
           var x = 0;
           print("length");
           print("${data['type']}".compareTo("Normal Student"));
-          if ("${data['type']}".compareTo("Normal Student")==0) {
+          if ("${data['type']}".compareTo("Normal Student") == 0) {
             print("normaaaal");
             return Drawer(
               child: Column(
@@ -85,22 +96,8 @@ class _MainDrawerState extends State<MainDrawer> {
                           color: Colors.white),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    child: SizedBox(
-                      height: 115,
-                      width: 115,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        fit: StackFit.expand,
-                        children: [
-                          CircleAvatar(
-                              // backgroundImage: AssetImage(""),
-                              ),
-                        ],
-                      ),
-                    ),
-                  ),
+
+                  ProfilePhoto(),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(11),
@@ -117,21 +114,6 @@ class _MainDrawerState extends State<MainDrawer> {
                       onPressed: () => navigateToProfile(context), //function
                     ),
                   ),
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: const EdgeInsets.all(11),
-                  //   child: ElevatedButton(
-                  //     child: Text("View My Posts",
-                  //         style: TextStyle(
-                  //             fontWeight: FontWeight.w500,
-                  //             fontSize: 15,
-                  //             color: Colors.blue[400])),
-                  //     style: ButtonStyle(
-                  //       backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
-                  //     ),
-                  //     onPressed: () => navigateToMyPosts(context), //function
-                  //   ),
-                  // ),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(11),
@@ -275,12 +257,15 @@ class _MainDrawerState extends State<MainDrawer> {
           }
           // return Text("Full Name: ${data['full_name']} ${data['last_name']}");
         }
-        return Scaffold(
-            drawer: MainDrawer(),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ));
-       },
+
+        // return Scaffold(
+        //     drawer: MainDrawer(),
+        //     body: Center(
+        //       child: CircularProgressIndicator(),
+        //     ));
+
+        return Text("rokayaaa");
+      },
     );
 
     // return Drawer(

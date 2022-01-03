@@ -9,7 +9,7 @@ import 'package:the_guc_cc_app/objects/MyNames.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import './profile_photo.dart';
+import 'edit_profile_photo.dart';
 
 class ViewProfile extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class ViewProfile extends StatefulWidget {
 class _ViewProfileState extends State<ViewProfile> {
   var _image;
   var imagePicker;
-  var i;
+  // var i;
 
   void initState() {
     //i = 0;
@@ -77,6 +77,8 @@ class _ViewProfileState extends State<ViewProfile> {
       future: users.doc(user!.uid).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        print("ViewProfile snapshot");
+        print(snapshot);
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
@@ -99,7 +101,7 @@ class _ViewProfileState extends State<ViewProfile> {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  ProfilePhoto(),
+                  EditProfilePhoto(),
                   Text(" ${user.displayName}",
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -142,11 +144,9 @@ class _ViewProfileState extends State<ViewProfile> {
           );
         }
 
-        return Scaffold(
-            drawer: MainDrawer(),
-            body: Center(
+        return  Center(
               child: CircularProgressIndicator(),
-            ));
+            );
       },
     );
   }
