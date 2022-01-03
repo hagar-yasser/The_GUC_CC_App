@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:the_guc_cc_app/authorization/Auth.dart';
 
 class VotingPostForm extends StatefulWidget {
   const VotingPostForm({Key? key}) : super(key: key);
@@ -12,6 +13,8 @@ class VotingPostForm extends StatefulWidget {
 class _VotingPostFormState extends State<VotingPostForm> {
   TextEditingController title = TextEditingController();
   TextEditingController body = TextEditingController();
+  String? myID=Auth().getCurrentUser()?.uid;
+  String? userName=Auth().getCurrentUser()?.displayName;
   // TextEditingController option1 = TextEditingController();
   // TextEditingController option2 = TextEditingController();
   var moreOptions = false;
@@ -38,7 +41,9 @@ class _VotingPostFormState extends State<VotingPostForm> {
       'body': b,
       'date': Timestamp.now(),
       'vote': v,
-      'options': options
+      'options': options,
+      'userID' :myID,
+      'userName':userName
     }).then((value) {
       print(value);
     }).catchError((onError) {

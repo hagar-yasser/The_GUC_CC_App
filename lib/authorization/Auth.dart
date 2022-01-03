@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:the_guc_cc_app/objects/MyNames.dart';
 import 'package:the_guc_cc_app/objects/MyUser.dart';
 
@@ -68,6 +69,8 @@ class Auth {
   }
 
   Future<void> signOut() async {
+    final fbm = FirebaseMessaging.instance;
+    fbm.unsubscribeFromTopic("CC");
     return await auth.signOut();
   }
 }
