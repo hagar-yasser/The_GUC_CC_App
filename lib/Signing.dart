@@ -89,7 +89,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
                         indicator: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(50), // Creates border
-                            color: Colors.blueAccent),
+                            color: Colors.amber),
                         controller: _tabController,
                         tabs: [
                           Tab(

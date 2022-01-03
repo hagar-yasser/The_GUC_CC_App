@@ -39,6 +39,7 @@ class _MyRoundedLoadingButtonState extends State<MyRoundedLoadingButton> {
     return RoundedLoadingButton(
       controller: _loadingController,
       successColor: Color(0xffEA907A),
+      color: Colors.amber,
       onPressed: () async {
         await widget.action();
         if (!_isDisposed && mounted) {
