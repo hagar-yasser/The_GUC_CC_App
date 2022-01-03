@@ -89,6 +89,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                         // backgroundImage: NetworkImage(
                         //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
                         backgroundImage: AssetImage('assets/images/avatar.png'),
+                        backgroundColor: Colors.grey[300],
                       ),
                     ],
                   ),
@@ -112,6 +113,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                     children: [
                       CircleAvatar(
                         backgroundImage: NetworkImage(data),
+                        backgroundColor: Colors.grey[300],
                       ),
                     ],
                   ),
@@ -135,6 +137,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                       // backgroundImage: NetworkImage(
                       //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
                       backgroundImage: AssetImage('assets/images/avatar.png'),
+                      backgroundColor: Colors.grey[300],
                     ),
                   ],
                 ),

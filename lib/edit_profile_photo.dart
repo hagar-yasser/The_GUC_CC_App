@@ -43,6 +43,9 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
       print("url");
       print(url);
       getPic(path);
+      setState(() {
+        URL = url;
+      });
     }).catchError((onError) {
       print(onError);
     });
@@ -68,9 +71,9 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
       Reference ref = storage.ref().child(path);
       url = await ref.getDownloadURL();
       URL = url;
-      setState(() {
-        
-      });
+      // setState(() {
+      //   URL
+      // });
     } on Exception catch (e) {
       url =
           "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344";
@@ -116,10 +119,12 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                     fit: StackFit.expand,
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(URL??
-                            "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                        // backgroundImage: NetworkImage(
+                        //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
                         //  backgroundImage: FileImage(_image ?? File("")),
                         // backgroundImage: FileImage(_image),
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
+                        backgroundColor: Colors.grey[300],
                       ),
                       Positioned(
                           bottom: 0,
@@ -175,8 +180,9 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                     clipBehavior: Clip.none,
                     fit: StackFit.expand,
                     children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(URL ),
+                       CircleAvatar(
+                        backgroundImage: NetworkImage(URL),
+                        backgroundColor: Colors.grey[300],
                         //  backgroundImage: FileImage(_image ?? File("")),
                         // backgroundImage: FileImage(_image),
                       ),
@@ -198,9 +204,9 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                               await getPic("${user.uid}");
                               print("after download");
                               String temp = await getPic("${user.uid}");
-                              setState(() {
-                                URL = temp;
-                              });
+                              // setState(() {
+                              //   URL = temp;
+                              // });
                               //  setState(() {
                               //   URL = temp;
                               // });
@@ -218,6 +224,45 @@ class _EditProfilePhotoState extends State<EditProfilePhoto> {
                             padding: EdgeInsets.all(15.0),
                             shape: CircleBorder(),
                           )),
+                     
+                      // Positioned(
+                      //     bottom: 0,
+                      //     right: -25,
+                      //     child: RawMaterialButton(
+                      //       onPressed: () async {
+                      //         print("gallery");
+                      //         var source = ImageSource.gallery;
+                      //         XFile image = await imagePicker.pickImage(
+                      //             source: source,
+                      //             imageQuality: 50,
+                      //             preferredCameraDevice: CameraDevice.front);
+                      //         print("before upload");
+                      //         await uploadPic2(File(image.path), "${user.uid}");
+                      //         print("after upload");
+                      //         print("before download");
+                      //         await getPic("${user.uid}");
+                      //         print("after download");
+                      //         String temp = await getPic("${user.uid}");
+                      //         setState(() {
+                      //           URL = temp;
+                      //         });
+                      //         //  setState(() {
+                      //         //   URL = temp;
+                      //         // });
+                      //         // await getPic("${user.uid}");
+                      //         // setState(() {
+                      //         //   _image = File(image.path);
+                      //         // });
+                      //       },
+                      //       elevation: 2.0,
+                      //       fillColor: Color(0xFFF5F6F9),
+                      //       child: Icon(
+                      //         Icons.camera_alt_outlined,
+                      //         color: Colors.blue,
+                      //       ),
+                      //       padding: EdgeInsets.all(15.0),
+                      //       shape: CircleBorder(),
+                      //     )),
                     ],
                   ),
                 ),

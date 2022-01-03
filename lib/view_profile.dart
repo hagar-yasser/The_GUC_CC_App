@@ -98,22 +98,27 @@ class _ViewProfileState extends State<ViewProfile> {
             ),
             drawer: MainDrawer(),
             body: Container(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.all(10),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   EditProfilePhoto(),
                   Text(" ${user.displayName}",
+                      
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
-                          color: Colors.blue[400])),
+                          color: Colors.grey[600]
+                          )),
 
                   SizedBox(height: 10),
                   Text(" ${data['type']} ",
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
-                          color: Colors.blue[400])),
+                          color: Colors.grey[600])),
 
                   SizedBox(height: 10),
 
@@ -121,7 +126,7 @@ class _ViewProfileState extends State<ViewProfile> {
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
-                          color: Colors.blue[400])),
+                          color: Colors.grey[600])),
 
                   SizedBox(height: 10),
                   // Text("Major",
