@@ -53,15 +53,7 @@ class _WrapperState extends State<Wrapper> {
               //QUERY THE DATABASE FOR THE USER DOCUMENT THAT HAS THIS EMAIL WHERE
               //YOU WILL KNOW THE USER TYPE AND OTHER INFO SUCH AS THE SAVED POSTS IDS SUPPOSEDLY
               print('returned scaffold in wrapper');
-              return Scaffold(
-                appBar: AppBar(
-                  title: Text('Wrapper'),
-                ),
-                drawer: MainDrawer(),
-                body: Center(
-                  child: ViewPosts(),
-                ),
-              );
+              return ViewPosts();
             } else {
               print("user from wrapper " + user.toString());
               return Signing();

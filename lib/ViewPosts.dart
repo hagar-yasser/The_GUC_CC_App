@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/SinglePost.dart';
+import 'package:the_guc_cc_app/drawer.dart';
 import 'AddNormalPostForm.dart';
 import 'authorization/Auth.dart';
 
@@ -286,6 +287,7 @@ class _ViewPostsState extends State<ViewPosts> {
         .orderBy("date", descending: true);
     var postDataStream = postData.snapshots();
     return Scaffold(
+        drawer: MainDrawer(),
         appBar: AppBar(
           title: const Text("Home Page"),
         ),

@@ -87,7 +87,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     width: double.infinity,
                     padding: EdgeInsets.all(20),
                     alignment: Alignment.centerLeft,
-                    color: Colors.blue,
+                    color: Colors.amber,
                     child: Text(
                       'My Profile',
                       style: TextStyle(
@@ -96,7 +96,6 @@ class _MainDrawerState extends State<MainDrawer> {
                           color: Colors.white),
                     ),
                   ),
-
                   ProfilePhoto(),
                   Container(
                     width: double.infinity,
@@ -106,7 +105,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
-                              color: Colors.blue[400])),
+                              color: Colors.amber)),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.grey[200]),
@@ -122,7 +121,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
-                              color: Colors.blue[400])),
+                              color: Colors.amber)),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.grey[200]),
@@ -138,7 +137,7 @@ class _MainDrawerState extends State<MainDrawer> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
-                                color: Colors.blue[400])),
+                                color: Colors.amber)),
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.grey[200]),
@@ -160,7 +159,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     width: double.infinity,
                     padding: EdgeInsets.all(20),
                     alignment: Alignment.centerLeft,
-                    color: Colors.blue,
+                    color: Colors.amber,
                     child: Text(
                       'My Profile',
                       style: TextStyle(
@@ -193,7 +192,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
-                              color: Colors.blue[400])),
+                              color: Colors.amber)),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.grey[200]),
@@ -209,7 +208,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
-                              color: Colors.blue[400])),
+                              color: Colors.amber)),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.grey[200]),
@@ -225,7 +224,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
-                              color: Colors.blue[400])),
+                              color: Colors.amber)),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.grey[200]),
@@ -241,13 +240,13 @@ class _MainDrawerState extends State<MainDrawer> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
-                                color: Colors.blue[400])),
+                                color: Colors.amber)),
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.grey[200]),
                         ),
-                        onPressed: ()  {
-                           auth.signOut();
+                        onPressed: () {
+                          auth.signOut();
                           //navigateToSigning(context);
                         }),
                   ),
