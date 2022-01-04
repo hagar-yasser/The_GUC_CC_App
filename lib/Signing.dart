@@ -24,7 +24,8 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   bool _signUp = true;
-  String userType = "Normal Student";
+  String defaultUserType = "Normal Student";
+  TextEditingController userType = TextEditingController();
 
   late List<TextEditingController> allControllers;
   late TabController _tabController;
@@ -39,6 +40,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    userType.text = defaultUserType;
     _tabController = TabController(vsync: this, length: 2);
     allControllers = [_emailController, _passwordController, _nameController];
   }
@@ -53,7 +55,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
           child: Column(
             children: [
               Container(
-                height: 150,
+                height: 70,
                 child: Center(
                   child: Text(
                     "The GUC CC App",
@@ -87,7 +89,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
                         indicator: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(50), // Creates border
-                            color: Colors.blueAccent),
+                            color: Colors.amber),
                         controller: _tabController,
                         tabs: [
                           Tab(
@@ -108,7 +110,7 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.65,
                       child: TabBarView(
                         controller: _tabController,
                         children: [
@@ -138,12 +140,13 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
 
                             if (_signUp) {
                               if (_formKey1.currentState!.validate()) {
+                                print("userType is" + userType.text);
                                 try {
                                   await auth.handleSignUp(
                                       _emailController.text,
                                       _passwordController.text,
                                       _nameController.text,
-                                      userType);
+                                      userType.text);
                                   allIsOk = true;
                                 } on Exception catch (e) {
                                   _showErrorDialog(context,
@@ -274,7 +277,7 @@ class LogIn extends StatelessWidget {
 
 class SignUp extends StatefulWidget {
   final List<TextEditingController> controllers;
-  String userType;
+  TextEditingController userType;
 
   SignUp({Key? key, required this.controllers, required this.userType})
       : super(key: key);
@@ -314,7 +317,7 @@ class _SignUpState extends State<SignUp> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: DropdownButton<String>(
-                value: widget.userType,
+                value: widget.userType.text,
                 icon: const Icon(
                   Icons.keyboard_arrow_down_rounded,
                 ),
@@ -326,7 +329,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 onChanged: (String? newValue) {
                   setState(() {
-                    widget.userType = newValue!;
+                    widget.userType.text = newValue!;
                   });
                 },
                 items: <String>['Normal Student', 'CC member']
