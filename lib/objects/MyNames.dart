@@ -1,6 +1,6 @@
 class myNames {
   static const usersTable = 'Users';
-  static const postsTable = 'Posts';
+  static const postsTable = 'posts';
   //EMAIL FIELD IN THE USERS TABLE
   static const email = 'email';
   //SAVEDPOSTSIDS FIELD IN THE USERS TABLE

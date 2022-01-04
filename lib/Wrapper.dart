@@ -56,16 +56,16 @@ class _WrapperState extends State<Wrapper> {
               return ViewPosts();
             } else {
               print("user from wrapper " + user.toString());
+              //Navigator.of(context).pushNamed(Signing.routeName);
               return Signing();
             }
           }
           //WHILE LOADING
           print('circular from wrapper');
           return Scaffold(
-              drawer: MainDrawer(),
               body: Center(
-                child: CircularProgressIndicator(),
-              ));
+            child: CircularProgressIndicator(),
+          ));
         });
   }
 }

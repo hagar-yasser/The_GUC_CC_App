@@ -118,32 +118,104 @@ class _ViewPostsState extends State<ViewPosts> {
   }
 
   //For the post author's name and pic
-  Widget authorDataUI(BuildContext context, String postId, DateTime postDate,
-      String postAuthor, String postAuthorId) {
+  Widget authorDataUI(
+      BuildContext context,
+      String postId,
+      DateTime postDate,
+      String postAuthor,
+      String postAuthorId,
+      bool vote,
+      Map<String, dynamic> postBody) {
     const double avatarDiameter = 44;
-    return StreamBuilder<Object>(
-        stream: null,
-        builder: (context, snapshot) {
-          return GestureDetector(
-            child: Row(
-              children: [
-                Expanded(
-                    child: Row(children: [
-                  Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: FutureBuilder<String>(
-                          future: getPic(postAuthorId),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            print("photo");
-                            print("snapshot");
-                            print(snapshot);
-                            // print(snapshot.data);
-                            if (snapshot.hasError) {
-                              return Text("Something went wrong");
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
+    final auth = Provider.of<Auth>(context);
+    User? user = auth.getCurrentUser();
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+    return FutureBuilder(
+        future: users.doc(user!.uid).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("Something went wrong");
+          }
+
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            return Text("Document does not exist");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            String type = data['type'];
+
+            return GestureDetector(
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Row(children: [
+                    Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: FutureBuilder<String>(
+                            future: getPic(postAuthorId),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              print("photo");
+                              print("snapshot");
+                              print(snapshot);
+                              // print(snapshot.data);
+                              if (snapshot.hasError) {
+                                return Text("Something went wrong");
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        fit: StackFit.expand,
+                                        children: [
+                                          CircleAvatar(
+                                            // backgroundImage: NetworkImage(
+                                            //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                                            backgroundImage: AssetImage(
+                                                'assets/images/avatar.png'),
+                                            backgroundColor: Colors.grey[300],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data as String;
+                                return Container(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        fit: StackFit.expand,
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(data),
+                                            backgroundColor: Colors.grey[300],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
                               return Container(
                                 alignment: Alignment.center,
                                 child: Container(
@@ -167,101 +239,107 @@ class _ViewPostsState extends State<ViewPosts> {
                                   ),
                                 ),
                               );
-                            }
+                            })
+                        //  Container(
+                        //   width: avatarDiameter,
+                        //   height: avatarDiameter,
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.blue,
+                        //     shape: BoxShape.circle,
+                        //   ),
+                        //   child: ClipRRect(
+                        //       borderRadius:
+                        //           BorderRadius.circular(avatarDiameter / 2),
+                        //       child: Image.network(imageURL)),
+                        // ),
 
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              String data = snapshot.data as String;
-                              return Container(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      fit: StackFit.expand,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage: NetworkImage(data),
-                                          backgroundColor: Colors.grey[300],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-
-                            return Container(
-                              alignment: Alignment.center,
-                              child: Container(
-                                padding: EdgeInsets.all(20),
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    fit: StackFit.expand,
-                                    children: [
-                                      CircleAvatar(
-                                        // backgroundImage: NetworkImage(
-                                        //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
-                                        backgroundImage: AssetImage(
-                                            'assets/images/avatar.png'),
-                                        backgroundColor: Colors.grey[300],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          })
-                      //  Container(
-                      //   width: avatarDiameter,
-                      //   height: avatarDiameter,
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.blue,
-                      //     shape: BoxShape.circle,
-                      //   ),
-                      //   child: ClipRRect(
-                      //       borderRadius:
-                      //           BorderRadius.circular(avatarDiameter / 2),
-                      //       child: Image.network(imageURL)),
-                      // ),
-
-                      ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        postAuthor,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
                         ),
-                      ),
-                      Text(
-                        calculatePostDate(postDate),
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                            color: Colors.grey),
-                      ),
-                    ],
-                  )
-                ])),
-                IconButton(
-                    onPressed: () => savePostForLater(postId, context),
-                    icon: Icon(
-                      savedPostsIDs.contains(postId)
-                          ? Icons.bookmark
-                          : Icons.bookmark_border_outlined,
-                      color: Colors.red[900],
-                    ))
-              ],
-            ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          postAuthor,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          calculatePostDate(postDate),
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 16,
+                              color: Colors.grey),
+                        ),
+                      ],
+                    )
+                  ])),
+                  (type.compareTo("Normal Student") == 0)
+                      ? Container()
+                      : IconButton(
+                          onPressed:
+                              // () => vote
+                              //     ? Navigator.of(context)
+                              //         .pushNamed("/NormalPostForm", arguments: postBody)
+                              //     : Navigator.of(context)
+                              //         .pushNamed("/VotingPostForm", arguments: postBody),
+                              () {
+                            var fire = FirebaseFirestore.instance
+                                .collection('posts')
+                                .doc(postId)
+                                .delete()
+                                .catchError((error) {
+                              return showDialog<Null>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                        title:
+                                            const Text("An error occurred !"),
+                                        content: Text(error.toString()),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(ctx).pop();
+                                              },
+                                              child: const Text('Okay'))
+                                        ],
+                                      ));
+                            });
+                          },
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.black,
+                          )),
+                  IconButton(
+                      onPressed: () => savePostForLater(postId, context),
+                      icon: Icon(
+                        savedPostsIDs.contains(postId)
+                            ? Icons.bookmark
+                            : Icons.bookmark_border_outlined,
+                        color: Colors.red[900],
+                      )),
+                  (type.compareTo("Normal Student") == 0)
+                      ? Container()
+                      : !vote
+                          ? IconButton(
+                              onPressed: () {
+                                if (!vote) {
+                                  postBody['id'] = postId;
+                                  Navigator.of(context).pushNamed(
+                                      "/NormalPostForm",
+                                      arguments: postBody);
+                                }
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.black,
+                              ))
+                          : Container()
+                ],
+              ),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
           );
         });
   }
@@ -468,6 +546,8 @@ class _ViewPostsState extends State<ViewPosts> {
                             authorDataUI: authorDataUI,
                             readOptions: readOptions,
                             postUserId: postDocAccessible["userID"],
+                            vote: postDocAccessible["vote"],
+                            postBody: postDocAccessible,
                           );
                         }),
                     FutureBuilder(
@@ -491,9 +571,7 @@ class _ViewPostsState extends State<ViewPosts> {
                             }
                             return addPostButton();
                           }
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return Container();
                         })
                     // AnimatedPositioned(
                     //     top: pressed

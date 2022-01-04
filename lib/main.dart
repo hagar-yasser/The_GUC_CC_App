@@ -105,6 +105,7 @@ class _MyAppState extends State<MyApp> {
             Signing.routeName: (context) => Signing(),
             //reem and donia
             NormalPostForm.NormalPostFormRoute: (context) => NormalPostForm(),
+            Wrapper.routeName:(context)=>Wrapper(),
             VotingPostForm.VotingPostFormRoute: (context) => VotingPostForm(),
             PostCard.PostCardRoute: (context) => PostCard(),
             ViewPosts.ViewPostsRoute: (context) => ViewPosts(),

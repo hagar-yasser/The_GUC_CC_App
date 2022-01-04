@@ -88,6 +88,7 @@
 // });
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'AddNormalPostForm.dart';
@@ -187,9 +188,23 @@ class _FavouritesState extends State<Favourites> {
     super.initState();
   }
 
+  Future<String> getPic(String path) async {
+    print("getting picture");
+    FirebaseStorage storage = FirebaseStorage.instance;
+    String url = "";
+    try {
+      Reference ref = storage.ref().child(path);
+      url = await ref.getDownloadURL();
+    } on Exception catch (e) {
+      url =
+          "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344";
+    }
+    return url;
+  }
+
   //For the post author's name and pic
   Widget authorDataUI(BuildContext context, String postId, DateTime postDate,
-      String postAuthor) {
+      String postAuthor, String postAuthorId) {
     const double avatarDiameter = 44;
     return StreamBuilder<Object>(
         stream: null,
@@ -200,20 +215,94 @@ class _FavouritesState extends State<Favourites> {
                 Expanded(
                     child: Row(children: [
                   Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Container(
-                      width: avatarDiameter,
-                      height: avatarDiameter,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(avatarDiameter / 2),
-                          child: Image.network(imageURL)),
-                    ),
-                  ),
+                      padding: const EdgeInsets.all(8),
+                      child: FutureBuilder<String>(
+                          future: getPic(postAuthorId),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            print("photo");
+                            print("snapshot");
+                            print(snapshot);
+                            // print(snapshot.data);
+                            if (snapshot.hasError) {
+                              return Text("Something went wrong");
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      fit: StackFit.expand,
+                                      children: [
+                                        CircleAvatar(
+                                          // backgroundImage: NetworkImage(
+                                          //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                                          backgroundImage: AssetImage(
+                                              'assets/images/avatar.png'),
+                                          backgroundColor: Colors.grey[300],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              String data = snapshot.data as String;
+                              return Container(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      fit: StackFit.expand,
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(data),
+                                          backgroundColor: Colors.grey[300],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return Container(
+                              alignment: Alignment.center,
+                              child: Container(
+                                padding: EdgeInsets.all(20),
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    fit: StackFit.expand,
+                                    children: [
+                                      CircleAvatar(
+                                        // backgroundImage: NetworkImage(
+                                        //     "https://firebasestorage.googleapis.com/v0/b/the-guc-cc-app.appspot.com/o/avatar.png?alt=media&token=d41dedeb-8632-4ff1-b4d3-65dc9ec2a344"),
+                                        backgroundImage: AssetImage(
+                                            'assets/images/avatar.png'),
+                                        backgroundColor: Colors.grey[300],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          })),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -393,8 +482,7 @@ class _FavouritesState extends State<Favourites> {
                     child: Text("No Favourite Posts"),
                   );
                 } else {
-                  return
-                  StreamBuilder<QuerySnapshot>(
+                  return StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection("posts")
                           .where(FieldPath.documentId,
@@ -432,7 +520,8 @@ class _FavouritesState extends State<Favourites> {
                                         postDocID,
                                         (postDocAccessible["date"] as Timestamp)
                                             .toDate(),
-                                        postDocAccessible["userName"]),
+                                        postDocAccessible["userName"],
+                                        postDocAccessible["userID"] as String),
                                     // authorDataUI(
                                     //     context,
                                     //     postDocID,
@@ -455,11 +544,10 @@ class _FavouritesState extends State<Favourites> {
                             });
                       });
                 }
-            
               }
-               return  Center(
-              child: CircularProgressIndicator(),
-            );
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             })
 
         // return (Text("done"));

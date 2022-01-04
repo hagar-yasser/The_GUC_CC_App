@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/MyRoundedLoadingButton.dart';
+import 'package:the_guc_cc_app/Wrapper.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'package:the_guc_cc_app/objects/MyUser.dart';
 
@@ -148,6 +149,8 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
                                       _nameController.text,
                                       userType.text);
                                   allIsOk = true;
+                                  Navigator.of(context)
+                                      .pushNamed(Wrapper.routeName);
                                 } on Exception catch (e) {
                                   _showErrorDialog(context,
                                       "couldn't creat a new account", e);
@@ -163,6 +166,8 @@ class _SigningState extends State<Signing> with SingleTickerProviderStateMixin {
                                       _passwordController.text);
                                   print('signedIN');
                                   allIsOk = true;
+                                  Navigator.of(context)
+                                      .pushNamed(Wrapper.routeName);
                                 } on Exception catch (e) {
                                   _showErrorDialog(
                                       context, "couldn't signIn", e);

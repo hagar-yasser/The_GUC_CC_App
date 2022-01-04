@@ -8,6 +8,8 @@ class SinglePost extends StatefulWidget {
   Function authorDataUI;
   Function readOptions;
   String postUserId = "";
+  bool vote = false;
+  Map<String, dynamic> postBody = new Map();
 
   SinglePost(
       {required this.postDocAccessible,
@@ -15,7 +17,9 @@ class SinglePost extends StatefulWidget {
       required this.PostContentContainer,
       required this.authorDataUI,
       required this.readOptions,
-      required this.postUserId});
+      required this.postUserId,
+      required this.vote,
+      required this.postBody});
 
   @override
   _SinglePostState createState() => _SinglePostState();
@@ -35,7 +39,9 @@ class _SinglePostState extends State<SinglePost> {
               widget.postDocID,
               (widget.postDocAccessible["date"] as Timestamp).toDate(),
               widget.postDocAccessible["userName"],
-              widget.postUserId),
+              widget.postUserId,
+              widget.vote,
+              widget.postBody),
           // authorDataUI(
           //     context,
           //     postDocID,

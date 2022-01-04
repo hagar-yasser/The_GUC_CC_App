@@ -164,9 +164,9 @@ class _MainDrawerState extends State<MainDrawer> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.grey[200]),
                         ),
-                        onPressed: () async {
-                          await auth.signOut();
-                          //navigateToSigning(context);
+                        onPressed: () {
+                          auth.signOut();
+                          navigateToSigning(context);
                         }),
                   ),
                 ],
@@ -285,7 +285,7 @@ class _MainDrawerState extends State<MainDrawer> {
                         ),
                         onPressed: () {
                           auth.signOut();
-                          //navigateToSigning(context);
+                          navigateToSigning(context);
                         }),
                   ),
                 ],
