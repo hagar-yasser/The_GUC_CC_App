@@ -13,8 +13,8 @@ class VotingPostForm extends StatefulWidget {
 class _VotingPostFormState extends State<VotingPostForm> {
   TextEditingController title = TextEditingController();
   TextEditingController body = TextEditingController();
-  String? myID=Auth().getCurrentUser()?.uid;
-  String? userName=Auth().getCurrentUser()?.displayName;
+  String? myID = Auth().getCurrentUser()?.uid;
+  String? userName = Auth().getCurrentUser()?.displayName;
   // TextEditingController option1 = TextEditingController();
   // TextEditingController option2 = TextEditingController();
   var moreOptions = false;
@@ -31,19 +31,20 @@ class _VotingPostFormState extends State<VotingPostForm> {
 
   CollectionReference posts = FirebaseFirestore.instance.collection("posts");
   var isloading = false;
-  Map<String, String> addOptions() {
-    return {for (var option in TextFields) option.controller!.text: ""};
+  Map<String, List<String>> addOptions() {
+    return {for (var option in TextFields) option.controller!.text: []};
   }
 
-  Future<void> AddPost(String t, String b, bool v, Map<String, String> options) {
+  Future<void> AddPost(
+      String t, String b, bool v, Map<String, List<String>> options) {
     return posts.add({
       'title': t,
       'body': b,
       'date': Timestamp.now(),
       'vote': v,
       'options': options,
-      'userID' :myID,
-      'userName':userName
+      'userID': myID,
+      'userName': userName
     }).then((value) {
       print(value);
     }).catchError((onError) {
@@ -58,37 +59,40 @@ class _VotingPostFormState extends State<VotingPostForm> {
           title: Text("The GUC CC App"),
           actions: [
             IconButton(
-                onPressed: () {
-                  setState(() {
-                    isloading = true;
-                  });
+              onPressed: () {
+                setState(() {
+                  isloading = true;
+                });
 
-                  var response =
-                      AddPost(title.text, body.text, true, addOptions())
-                          .then((_) {
-                    setState(() {
-                      title.clear();
-                      body.clear();
-                      isloading = false;
-                      Navigator.of(context).pop();
-                    });
-                  }).catchError((onError) {
-                    return showDialog<Null>(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                              title: const Text("An error occurred !"),
-                              content: Text(onError.toString()),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop();
-                                    },
-                                    child: const Text('Okay'))
-                              ],
-                            ));
+                var response =
+                    AddPost(title.text, body.text, true, addOptions())
+                        .then((_) {
+                  setState(() {
+                    title.clear();
+                    body.clear();
+                    isloading = false;
+                    Navigator.of(context).pop();
                   });
-                },
-                icon: Icon(Icons.check,),)
+                }).catchError((onError) {
+                  return showDialog<Null>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                            title: const Text("An error occurred !"),
+                            content: Text(onError.toString()),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: const Text('Okay'))
+                            ],
+                          ));
+                });
+              },
+              icon: Icon(
+                Icons.check,
+              ),
+            )
           ],
         ),
         body: isloading
@@ -96,8 +100,7 @@ class _VotingPostFormState extends State<VotingPostForm> {
                 child: CircularProgressIndicator(),
               )
             : SingleChildScrollView(
-              padding: EdgeInsets.all(10),
-              
+                padding: EdgeInsets.all(10),
                 physics: ScrollPhysics(),
                 child: Column(
                   children: [

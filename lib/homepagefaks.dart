@@ -37,17 +37,15 @@ class _homepageState extends State<homepage> {
         body: Container(
           margin: EdgeInsets.all(15),
           child: pressed
-              ? Column( children: [
+              ? Column(children: [
                   ElevatedButton(
                     child: Text("Log Out"),
                     onPressed: () {
                       authProvider.signOut();
                     },
                   ),
-                  Column(
-                    children: [
+                  Column(children: [
                     ElevatedButton(
-                   
                       child: Text("Voting"),
                       onPressed: () {
                         Navigator.of(context).pushNamed("/VotingPostForm");
@@ -66,8 +64,20 @@ class _homepageState extends State<homepage> {
                       Navigator.of(context).pushNamed("/PostCard");
                     },
                   ),
+                  ElevatedButton(
+                    child: Text("Main Page"),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/viewposts");
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text("Saved Posts"),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/favourites");
+                    },
+                  ),
                 ])
-              : Column( children: [
+              : Column(children: [
                   ElevatedButton(
                     child: Text("Log Out"),
                     onPressed: () {

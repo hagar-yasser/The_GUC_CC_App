@@ -6,7 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class NormalPostForm extends StatefulWidget {
   const NormalPostForm({Key? key}) : super(key: key);
   static const NormalPostFormRoute = "/NormalPostForm";
-  
 
   @override
   _NormalPostFormState createState() => _NormalPostFormState();
@@ -17,17 +16,18 @@ class _NormalPostFormState extends State<NormalPostForm> {
   TextEditingController body = TextEditingController();
   CollectionReference posts = FirebaseFirestore.instance.collection("posts");
   var isloading = false;
-  String? myID=Auth().getCurrentUser()?.uid;
-  String? userName=Auth().getCurrentUser()?.displayName;
-  Future<void> AddPost(String t, String b, bool v, Map<String, dynamic> options) {
+  String? myID = Auth().getCurrentUser()?.uid;
+  String? userName = Auth().getCurrentUser()?.displayName;
+  Future<void> AddPost(
+      String t, String b, bool v, Map<String, List<String>> options) {
     return posts.add({
       'title': t,
       'body': b,
       'date': Timestamp.now(),
       'vote': v,
       'options': options,
-      'userID' :myID,
-      'userName':userName
+      'userID': myID,
+      'userName': userName
     }).then((value) {
       print(value);
     }).catchError((onError) {

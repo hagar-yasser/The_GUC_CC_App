@@ -23,6 +23,9 @@ class _ViewPostsState extends State<ViewPosts> {
   Provider<Auth>? authProvider;
   String postAuthorName = "Anomynous";
   String optionsSelected = "";
+  var pressed = false;
+  List<dynamic> savedPostsIDs = [];
+  String imageURL = "";
 
   Future<void> readAllPosts() {
     return FirebaseFirestore.instance
@@ -39,27 +42,47 @@ class _ViewPostsState extends State<ViewPosts> {
     }).catchError((error) => print(error));
   }
 
-  Future<void> savePostForLater(String postId, BuildContext context) {
+  Future<void> readAllSavedPosts() async {
     return FirebaseFirestore.instance
         .collection('Users')
-        .where('email', isEqualTo: currentUser!.email)
+        .doc(currentUser!.uid)
         .get()
-        .then((QuerySnapshot qs) {
+        .then((DocumentSnapshot ds) {
+      print(ds.data());
       setState(() {
-        qs.docs.forEach((doc) {
-          List<String> newPostsId = doc.data() as List<String>;
-          newPostsId.add(postId);
-          FirebaseFirestore.instance
-              .collection('Users')
-              .doc(doc.id)
-              .update({'savesPostsIDs': newPostsId}).then((value) {
-            final snackbar =
-                SnackBar(content: Text("Added to 'Saved for Later'"));
-            ScaffoldMessenger.of(context).showSnackBar(snackbar);
-          });
-        });
+        savedPostsIDs = (ds.data() as Map<String, dynamic>)['savedPostsIDs']
+            as List<dynamic>;
       });
     }).catchError((error) => print(error));
+  }
+
+  Future<void> savePostForLater(String postId, BuildContext context) {
+    String msgText = "";
+    if (!savedPostsIDs.contains(postId)) {
+      setState(() {
+        savedPostsIDs.add(postId);
+      });
+      msgText = "Succssfully added to 'Save for later'";
+      return FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.uid)
+          .update({"savedPostsIDs": savedPostsIDs}).then((value) {
+        final snackbar = SnackBar(content: Text(msgText));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      }).catchError((error) => print(error));
+    } else {
+      setState(() {
+        savedPostsIDs.remove(postId);
+      });
+      msgText = "Succssfully removed to 'Save for later'";
+      return FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.uid)
+          .update({"savedPostsIDs": savedPostsIDs}).then((value) {
+        final snackbar = SnackBar(content: Text(msgText));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      }).catchError((error) => print(error));
+    }
   }
 
   @override
@@ -68,6 +91,9 @@ class _ViewPostsState extends State<ViewPosts> {
     currentUser = authProvider.getCurrentUser();
     print(currentUser);
     readAllPosts();
+    readAllSavedPosts();
+    imageURL = (currentUser?.photoURL ??
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7v5zeGFeNpO89fHd0XbafbNcilJVqTe8aUA&usqp=CAU');
     // TODO: implement initState
     super.initState();
   }
@@ -96,9 +122,7 @@ class _ViewPostsState extends State<ViewPosts> {
                       child: ClipRRect(
                           borderRadius:
                               BorderRadius.circular(avatarDiameter / 2),
-                          child: Image.network(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7v5zeGFeNpO89fHd0XbafbNcilJVqTe8aUA&usqp=CAU') //TODO: Should be changed with the user pic
-                          ),
+                          child: Image.network(imageURL)),
                     ),
                   ),
                   Column(
@@ -123,7 +147,12 @@ class _ViewPostsState extends State<ViewPosts> {
                 ])),
                 IconButton(
                     onPressed: () => savePostForLater(postId, context),
-                    icon: Icon(Icons.bookmark))
+                    icon: Icon(
+                      savedPostsIDs.contains(postId)
+                          ? Icons.bookmark
+                          : Icons.bookmark_border_outlined,
+                      color: Colors.red[900],
+                    ))
               ],
             ),
           );
@@ -174,7 +203,7 @@ class _ViewPostsState extends State<ViewPosts> {
     } else if (duration.inHours >= 1) {
       return '${duration.inHours}h ago';
     } else if (duration.inMinutes >= 1) {
-      return '${duration.inHours}min ago';
+      return '${duration.inMinutes}min ago';
     }
     return "Just now";
   }
@@ -188,48 +217,69 @@ class _ViewPostsState extends State<ViewPosts> {
             return ListTile(
               title: Text(options.keys.elementAt(index)),
               leading: Radio<dynamic>(
-                value: options.values.elementAt(index),
+                value: options.keys.elementAt(index),
                 groupValue: null,
-                onChanged: ((val) => changeVote(val as String, postId)),
+                onChanged: ((val) =>
+                    changeVote(val as String, postId, options)),
               ),
-              trailing: Text('${options.length}'),
+              trailing: Text((options.values.elementAt(index).length == 0)
+                  ? '0'
+                  : '${(options.values.elementAt(index) as List<dynamic>).length}'),
             );
           }),
     );
   }
 
-  Future<void> changeVote(String newOption, String postId) async {
+  Future<void> changeVote(
+      String newOption, String postId, Map<String, dynamic> options) async {
+    // setState(() {
+    //   optionsSelected = newOption;
+    //   Map<String, List<dynamic>> postOptions = new Map();
+    //   FirebaseFirestore.instance
+    //       .collection('posts')
+    //       .doc(postId)
+    //       .get()
+    //       .then((DocumentSnapshot qs) {
+    //     print(qs.data());
+    //     Map<String, dynamic> postData = qs.data() as Map<String, dynamic>;
+    //     // print(postData);
+    //     postOptions = postData['options'] as Map<String, List<dynamic>>;
+    //     // print(postOptions);
+    //     postOptions.forEach((key, value) {
+    //       if ((value as List<dynamic>).contains(currentUser!.uid)) {
+    //         (value as List<dynamic>).remove(currentUser!.uid);
+    //       }
+    //       if (key == newOption) {
+    //         (value as List<dynamic>).add(currentUser!.uid);
+    //       }
+    //     });
+    //   }).catchError((error) => print(error));
+    //   FirebaseFirestore.instance
+    //       .collection('posts')
+    //       .doc(postId)
+    //       .update({'options': postOptions});
+    // });
+
     setState(() {
-      optionsSelected = newOption;
-      Map<String, dynamic> postOptions = new Map();
+      options.forEach((key, value) {
+        if ((value as List<dynamic>).contains(currentUser!.uid)) {
+          (value as List<dynamic>).remove(currentUser!.uid);
+        }
+        if (key == newOption) {
+          (value as List<dynamic>).add(currentUser!.uid);
+        }
+      });
       FirebaseFirestore.instance
           .collection('posts')
           .doc(postId)
-          .get()
-          .then((DocumentSnapshot qs) {
-        print(qs.id);
-        Map<String, dynamic> postData = qs.data() as Map<String, dynamic>;
-        print(postData);
-        postOptions = postData['options'] as Map<String, dynamic>;
-        print(postOptions);
-        postOptions.forEach((key, value) {
-          if ((value as List<String>).contains(currentUser!.uid)) {
-            (value as List<String>).remove(currentUser!.uid);
-          }
-          if (key == newOption) {
-            (value as List<String>).add(currentUser!.uid);
-          }
-        });
-      }).catchError((error) => print(error));
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({'options': postOptions});
+          .update({'options': options});
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // readAllSavedPosts();
+    print(savedPostsIDs);
     var postData = FirebaseFirestore.instance
         .collection("posts")
         .orderBy("date", descending: true);
@@ -238,10 +288,17 @@ class _ViewPostsState extends State<ViewPosts> {
         appBar: AppBar(
           title: const Text("Home Page"),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => Navigator.of(context)
-              .pushNamed(NormalPostForm.NormalPostFormRoute),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              pressed = !pressed;
+            });
+
+            // Add your onPressed code here!
+          },
+          label: const Text('Add Post'),
+          icon: const Icon(Icons.post_add),
+          backgroundColor: Colors.amber,
         ),
         body: hasValues
             ? StreamBuilder<QuerySnapshot>(
@@ -252,46 +309,75 @@ class _ViewPostsState extends State<ViewPosts> {
                       child: CircularProgressIndicator(),
                     );
                   var postDataDoc = snapshot.data!.docs;
-                  return ListView.builder(
-                      itemCount: postDataDoc.length,
-                      itemBuilder: (context, index) {
-                        var postDocAccessible =
-                            postDataDoc[index].data() as Map<String, dynamic>;
-                        var postDocID = postDataDoc[index].id;
-                        // print(postDocAccessible["userID:"]);
-                        // getPostAuthor(postDocAccessible["userID:"] as String);
-                        return Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          margin: EdgeInsets.all(5),
-                          child: Column(
-                            children: [
-                              // authorDataUI(
-                              //     context,
-                              //     postDocID,
-                              //     (postDocAccessible["date"] as Timestamp)
-                              //         .toDate(),
-                              //     postDocAccessible["userName"]),
-                              authorDataUI(
-                                  context,
-                                  postDocID,
-                                  (postDocAccessible["date"] as Timestamp)
-                                      .toDate(),
-                                  "Ano."),
-                              PostContentContainer(context, postDocAccessible),
-                              (postDocAccessible['vote'] as bool)
-                                  ? readOptions(
-                                      (postDocAccessible["options"]
-                                          as Map<String, dynamic>),
-                                      postDocID)
-                                  : Container(
-                                      height: 0,
-                                    )
-                            ],
-                          ),
-                        );
-                      });
+                  return Stack(children: [
+                    ListView.builder(
+                        itemCount: postDataDoc.length,
+                        itemBuilder: (context, index) {
+                          var postDocAccessible =
+                              postDataDoc[index].data() as Map<String, dynamic>;
+                          var postDocID = postDataDoc[index].id;
+                          // print(postDocAccessible["userID:"]);
+                          // getPostAuthor(postDocAccessible["userID:"] as String);
+                          return Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            margin: EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                authorDataUI(
+                                    context,
+                                    postDocID,
+                                    (postDocAccessible["date"] as Timestamp)
+                                        .toDate(),
+                                    postDocAccessible["userName"]),
+                                // authorDataUI(
+                                //     context,
+                                //     postDocID,
+                                //     (postDocAccessible["date"] as Timestamp)
+                                //         .toDate(),
+                                //     "Ano."),
+                                PostContentContainer(
+                                    context, postDocAccessible),
+                                (postDocAccessible['vote'] as bool)
+                                    ? readOptions(
+                                        (postDocAccessible["options"]
+                                            as Map<String, dynamic>),
+                                        postDocID)
+                                    : Container(
+                                        height: 0,
+                                      )
+                              ],
+                            ),
+                          );
+                        }),
+                    AnimatedPositioned(
+                        top: pressed
+                            ? 3.25 * MediaQuery.of(context).size.height / 5
+                            : 3.85 * MediaQuery.of(context).size.height / 5,
+                        left: 3.45 * MediaQuery.of(context).size.width / 5,
+                        child: ElevatedButton(
+                          child: Text("Normal"),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed("/NormalPostForm");
+                          },
+                        ),
+                        duration: Duration(seconds: 2),
+                        curve: Curves.fastOutSlowIn),
+                    AnimatedPositioned(
+                        top: pressed
+                            ? 3.5 * MediaQuery.of(context).size.height / 5
+                            : 3.85 * MediaQuery.of(context).size.height / 5,
+                        left: 3.5 * MediaQuery.of(context).size.width / 5,
+                        child: ElevatedButton(
+                          child: Text("Voting"),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed("/VotingPostForm");
+                          },
+                        ),
+                        duration: Duration(seconds: 2),
+                        curve: Curves.fastOutSlowIn),
+                  ]);
                 })
             : Center(
                 child: CircularProgressIndicator(),
