@@ -391,6 +391,9 @@ class _ViewPostsState extends State<ViewPosts> {
         .collection("posts")
         .orderBy("date", descending: true);
     var postDataStream = postData.snapshots();
+    final auth = Provider.of<Auth>(context);
+    User? user = auth.getCurrentUser();
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
     return Scaffold(
         drawer: MainDrawer(),
         appBar: AppBar(
@@ -467,7 +470,31 @@ class _ViewPostsState extends State<ViewPosts> {
                             postUserId: postDocAccessible["userID"],
                           );
                         }),
-                    addPostButton()
+                    FutureBuilder(
+                        future: users.doc(user!.uid).get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
+
+                          if (snapshot.hasData && !snapshot.data!.exists) {
+                            return Text("Document does not exist");
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            Map<String, dynamic> data =
+                                snapshot.data!.data() as Map<String, dynamic>;
+                            String type = data['type'];
+                            if (type.compareTo("Normal Student") == 0) {
+                              return Container();
+                            }
+                            return addPostButton();
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        })
                     // AnimatedPositioned(
                     //     top: pressed
                     //         ? 3 * MediaQuery.of(context).size.height / 5

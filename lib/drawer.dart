@@ -30,7 +30,7 @@ class _MainDrawerState extends State<MainDrawer> {
 
   navigateToMyPosts(BuildContext myContext) {
     Navigator.of(myContext).pushNamed(
-      '/favourites',
+      '/myPostsRoute',
     );
     // arguments: {'category': cat});
   }
@@ -220,6 +220,22 @@ class _MainDrawerState extends State<MainDrawer> {
                             MaterialStateProperty.all(Colors.grey[200]),
                       ),
                       onPressed: () => navigateToProfile(context), //function
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(11),
+                    child: ElevatedButton(
+                      child: Text("Home Page",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.amber)),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.grey[200]),
+                      ),
+                      onPressed: () => navigateToHome(context), //function
                     ),
                   ),
                   Container(
