@@ -1,14 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:the_guc_cc_app/objects/MyNames.dart';
 import 'package:the_guc_cc_app/objects/MyUser.dart';
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  String _token = "";
+  DateTime _expiryDate = DateTime.utc(1970);
+  String _userId = "";
+  String _name = "";
+  String _type = "";
   MyUser? convertFirbaseUser(User? user) {
     if (user == null) {
       return null;
     }
+
     return MyUser(user.email, user.displayName);
   }
 
@@ -52,7 +59,7 @@ class Auth {
     await firestore.collection(myNames.usersTable).doc(result.user!.uid).set({
       myNames.email: email,
       myNames.name: name,
-      myNames.savedPostsIDs: {},
+      myNames.savedPostsIDs: [], // Modified
       myNames.type: userType,
     });
 
@@ -68,6 +75,8 @@ class Auth {
   }
 
   Future<void> signOut() async {
+    final fbm = FirebaseMessaging.instance;
+    fbm.unsubscribeFromTopic("CC");
     return await auth.signOut();
   }
 }
