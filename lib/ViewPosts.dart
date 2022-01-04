@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_guc_cc_app/SinglePost.dart';
 import 'AddNormalPostForm.dart';
 import 'authorization/Auth.dart';
 
@@ -317,39 +318,45 @@ class _ViewPostsState extends State<ViewPosts> {
                               postDataDoc[index].data() as Map<String, dynamic>;
                           var postDocID = postDataDoc[index].id;
                           // print(postDocAccessible["userID:"]);
-                          // getPostAuthor(postDocAccessible["userID:"] as String);
-                          return Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                            margin: EdgeInsets.all(5),
-                            child: Column(
-                              children: [
-                                authorDataUI(
-                                    context,
-                                    postDocID,
-                                    (postDocAccessible["date"] as Timestamp)
-                                        .toDate(),
-                                    postDocAccessible["userName"]),
-                                // authorDataUI(
-                                //     context,
-                                //     postDocID,
-                                //     (postDocAccessible["date"] as Timestamp)
-                                //         .toDate(),
-                                //     "Ano."),
-                                PostContentContainer(
-                                    context, postDocAccessible),
-                                (postDocAccessible['vote'] as bool)
-                                    ? readOptions(
-                                        (postDocAccessible["options"]
-                                            as Map<String, dynamic>),
-                                        postDocID)
-                                    : Container(
-                                        height: 0,
-                                      )
-                              ],
-                            ),
-                          );
+                          getPostAuthor(postDocAccessible["userID"] as String);
+                          // return Card(
+                          //   elevation: 2,
+                          //   shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(5)),
+                          //   margin: EdgeInsets.all(5),
+                          //   child: Column(
+                          //     children: [
+                          //       authorDataUI(
+                          //           context,
+                          //           postDocID,
+                          //           (postDocAccessible["date"] as Timestamp)
+                          //               .toDate(),
+                          //           postDocAccessible["userName"]),
+                          //       // authorDataUI(
+                          //       //     context,
+                          //       //     postDocID,
+                          //       //     (postDocAccessible["date"] as Timestamp)
+                          //       //         .toDate(),
+                          //       //     "Ano."),
+                          //       PostContentContainer(
+                          //           context, postDocAccessible),
+                          //       (postDocAccessible['vote'] as bool)
+                          //           ? readOptions(
+                          //               (postDocAccessible["options"]
+                          //                   as Map<String, dynamic>),
+                          //               postDocID)
+                          //           : Container(
+                          //               height: 0,
+                          //             )
+                          //     ],
+                          //   ),
+                          // );
+                          return SinglePost(
+                              postDocAccessible: postDocAccessible,
+                              postDocID: postDocID,
+                              PostContentContainer: PostContentContainer,
+                              authorDataUI: authorDataUI,
+                              readOptions: readOptions);
                         }),
                     AnimatedPositioned(
                         top: pressed

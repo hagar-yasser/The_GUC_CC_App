@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/Signing.dart';
+import 'package:the_guc_cc_app/ViewPosts.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'package:the_guc_cc_app/homepagefaks.dart';
 import 'package:the_guc_cc_app/objects/MyNames.dart';
