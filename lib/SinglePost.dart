@@ -7,13 +7,15 @@ class SinglePost extends StatefulWidget {
   Function PostContentContainer;
   Function authorDataUI;
   Function readOptions;
+  String postUserId = "";
 
   SinglePost(
       {required this.postDocAccessible,
       required this.postDocID,
       required this.PostContentContainer,
       required this.authorDataUI,
-      required this.readOptions});
+      required this.readOptions,
+      required this.postUserId});
 
   @override
   _SinglePostState createState() => _SinglePostState();
@@ -32,7 +34,8 @@ class _SinglePostState extends State<SinglePost> {
               context,
               widget.postDocID,
               (widget.postDocAccessible["date"] as Timestamp).toDate(),
-              widget.postDocAccessible["userName"]),
+              widget.postDocAccessible["userName"],
+              widget.postUserId),
           // authorDataUI(
           //     context,
           //     postDocID,

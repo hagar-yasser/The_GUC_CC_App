@@ -1,3 +1,91 @@
+// hasValues
+//     ?
+//     ?
+// StreamBuilder<QuerySnapshot>(
+//     stream:
+//         FirebaseFirestore.instance.collection("Users").snapshots(),
+//     builder: (context, snapshot) {
+//       if (snapshot.connectionState == ConnectionState.waiting
+//           // ||
+//           //     !hasValues
+//           )
+//         return Center(
+//           child: CircularProgressIndicator(),
+//         );
+
+//       var usersDocs = snapshot.data!.docs;
+//       QueryDocumentSnapshot<Object?> currUserDoc = usersDocs
+//           .firstWhere((doc) => (doc.id == currentUser!.uid));
+//       List<dynamic> fav = (currUserDoc.data()
+//               as Map<String, dynamic>)['savedPostsIDs']
+//           as List<dynamic>;
+//       print(fav);
+//       return StreamBuilder<QuerySnapshot>(
+//           stream: FirebaseFirestore.instance
+//               .collection("posts")
+//               .where(FieldPath.documentId, whereIn: fav)
+//               // .orderBy("date", descending: true)
+//               .snapshots(),
+//           builder: (context, snapshot) {
+//             if (snapshot.connectionState == ConnectionState.waiting)
+//               return Center(
+//                 child: CircularProgressIndicator(),
+//               );
+//             // if (snapshot.connectionState == ConnectionState.waiting)
+//             //   return Center(
+//             //     child: CircularProgressIndicator(),
+//             //   );
+//             var postDataDoc = snapshot.data!.docs;
+//             return ListView.builder(
+//                 itemCount: postDataDoc.length,
+//                 itemBuilder: (context, index) {
+//                   var postDocAccessible = postDataDoc[index].data()
+//                       as Map<String, dynamic>;
+//                   var postDocID = postDataDoc[index].id;
+//                   // print(postDocAccessible["userID:"]);
+//                   getPostAuthor(
+//                       postDocAccessible["userID"] as String);
+//                   return Card(
+//                     elevation: 2,
+//                     shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(5)),
+//                     margin: EdgeInsets.all(5),
+//                     child: Column(
+//                       children: [
+//                         authorDataUI(
+//                             context,
+//                             postDocID,
+//                             (postDocAccessible["date"] as Timestamp)
+//                                 .toDate(),
+//                             postDocAccessible["userName"]),
+//                         // authorDataUI(
+//                         //     context,
+//                         //     postDocID,
+//                         //     (postDocAccessible["date"] as Timestamp)
+//                         //         .toDate(),
+//                         //     "Ano."),
+//                         PostContentContainer(
+//                             context, postDocAccessible),
+//                         (postDocAccessible['vote'] as bool)
+//                             ? readOptions(
+//                                 (postDocAccessible["options"]
+//                                     as Map<String, dynamic>),
+//                                 postDocID)
+//                             : Container(
+//                                 height: 0,
+//                               )
+//                       ],
+//                     ),
+//                   );
+//                   // return SinglePost(
+//                   //     postDocAccessible: postDocAccessible,
+//                   //     postDocID: postDocID,
+//                   //     PostContentContainer: PostContentContainer,
+//                   //     authorDataUI: authorDataUI,
+//                   //     readOptions: readOptions);
+//                 });
+//           });
+// });
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -275,36 +363,42 @@ class _FavouritesState extends State<Favourites> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context);
+    User? user = auth.getCurrentUser();
+
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Saved Posts"),
         ),
-        body:
-            // hasValues
-            //     ?
-            StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection("Users").snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting
-                      // ||
-                      //     !hasValues
-                      )
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+        body: FutureBuilder<DocumentSnapshot>(
+            future: users.doc(user!.uid).get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text("Something went wrong");
+              }
 
-                  var usersDocs = snapshot.data!.docs;
-                  QueryDocumentSnapshot<Object?> currUserDoc = usersDocs
-                      .firstWhere((doc) => (doc.id == currentUser!.uid));
-                  List<dynamic> fav = (currUserDoc.data()
-                          as Map<String, dynamic>)['savedPostsIDs']
-                      as List<dynamic>;
-                  print(fav);
-                  return StreamBuilder<QuerySnapshot>(
+              if (snapshot.hasData && !snapshot.data!.exists) {
+                return Text("Document does not exist");
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                print("saved posts: ${data['savedPostsIDs'].length} ");
+                if (data['savedPostsIDs'].length == 0) {
+                  return Center(
+                    child: Text("No Favourite Posts"),
+                  );
+                } else {
+                  return
+                  StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection("posts")
-                          .where(FieldPath.documentId, whereIn: fav)
+                          .where(FieldPath.documentId,
+                              whereIn: data['savedPostsIDs'])
                           // .orderBy("date", descending: true)
                           .snapshots(),
                       builder: (context, snapshot) {
@@ -326,51 +420,52 @@ class _FavouritesState extends State<Favourites> {
                               // print(postDocAccessible["userID:"]);
                               getPostAuthor(
                                   postDocAccessible["userID"] as String);
-                              // return Card(
-                              //   elevation: 2,
-                              //   shape: RoundedRectangleBorder(
-                              //       borderRadius: BorderRadius.circular(5)),
-                              //   margin: EdgeInsets.all(5),
-                              //   child: Column(
-                              //     children: [
-                              //       authorDataUI(
-                              //           context,
-                              //           postDocID,
-                              //           (postDocAccessible["date"] as Timestamp)
-                              //               .toDate(),
-                              //           postDocAccessible["userName"]),
-                              //       // authorDataUI(
-                              //       //     context,
-                              //       //     postDocID,
-                              //       //     (postDocAccessible["date"] as Timestamp)
-                              //       //         .toDate(),
-                              //       //     "Ano."),
-                              //       PostContentContainer(
-                              //           context, postDocAccessible),
-                              //       (postDocAccessible['vote'] as bool)
-                              //           ? readOptions(
-                              //               (postDocAccessible["options"]
-                              //                   as Map<String, dynamic>),
-                              //               postDocID)
-                              //           : Container(
-                              //               height: 0,
-                              //             )
-                              //     ],
-                              //   ),
-                              // );
-                              return SinglePost(
-                                  postDocAccessible: postDocAccessible,
-                                  postDocID: postDocID,
-                                  PostContentContainer: PostContentContainer,
-                                  authorDataUI: authorDataUI,
-                                  readOptions: readOptions);
+                              return Card(
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                margin: EdgeInsets.all(5),
+                                child: Column(
+                                  children: [
+                                    authorDataUI(
+                                        context,
+                                        postDocID,
+                                        (postDocAccessible["date"] as Timestamp)
+                                            .toDate(),
+                                        postDocAccessible["userName"]),
+                                    // authorDataUI(
+                                    //     context,
+                                    //     postDocID,
+                                    //     (postDocAccessible["date"] as Timestamp)
+                                    //         .toDate(),
+                                    //     "Ano."),
+                                    PostContentContainer(
+                                        context, postDocAccessible),
+                                    (postDocAccessible['vote'] as bool)
+                                        ? readOptions(
+                                            (postDocAccessible["options"]
+                                                as Map<String, dynamic>),
+                                            postDocID)
+                                        : Container(
+                                            height: 0,
+                                          )
+                                  ],
+                                ),
+                              );
                             });
                       });
-                  // });
-                })
-        // :
-        // Center(
-        //     child: CircularProgressIndicator(),
+                }
+            
+              }
+               return  Center(
+              child: CircularProgressIndicator(),
+            );
+            })
+
+        // return (Text("done"));
+
+        // : Center(
+        //     child: Text("No Favourite Posts"),
         //   )
         // : Center(child: Text("No Posts added to Favorites"))
         );

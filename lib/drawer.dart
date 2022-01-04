@@ -23,14 +23,14 @@ class _MainDrawerState extends State<MainDrawer> {
 
   navigateToSaved(BuildContext myContext) {
     Navigator.of(myContext).pushNamed(
-      '/savedRoute',
+      '/favourites',
     );
     // arguments: {'category': cat});
   }
 
   navigateToMyPosts(BuildContext myContext) {
     Navigator.of(myContext).pushNamed(
-      '/myPostsRoute',
+      '/favourites',
     );
     // arguments: {'category': cat});
   }
@@ -38,6 +38,12 @@ class _MainDrawerState extends State<MainDrawer> {
   navigateToSigning(BuildContext myContext) {
     Navigator.of(myContext).pushNamed(
       '/signing',
+    );
+  }
+
+  navigateToHome(BuildContext myContext) {
+    Navigator.of(myContext).pushNamed(
+      '/viewposts',
     );
     // arguments: {'category': cat});
   }
@@ -111,6 +117,22 @@ class _MainDrawerState extends State<MainDrawer> {
                             MaterialStateProperty.all(Colors.grey[200]),
                       ),
                       onPressed: () => navigateToProfile(context), //function
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(11),
+                    child: ElevatedButton(
+                      child: Text("Home Page",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.amber)),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.grey[200]),
+                      ),
+                      onPressed: () => navigateToHome(context), //function
                     ),
                   ),
                   Container(
