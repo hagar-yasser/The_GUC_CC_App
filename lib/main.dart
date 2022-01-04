@@ -2,22 +2,27 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:the_guc_cc_app/Wrapper.dart';
+import './dummy_page.dart';
+import './my_post_screen.dart';
+import './saved_screen.dart';
+import './view_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:the_guc_cc_app/Favourites.dart';
 import 'package:the_guc_cc_app/Signing.dart';
-import 'package:the_guc_cc_app/Wrapper.dart';
 import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'AddNormalPostForm.dart';
 import 'AddVotingPost.dart';
 import 'PostCard.dart';
 import 'ViewPosts.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import './Wrapper.dart';
 
 Future<void> background_notif_handler(RemoteMessage message) async {
   print("Handling a background message: ${message.data}");
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(background_notif_handler);
@@ -103,7 +108,10 @@ class _MyAppState extends State<MyApp> {
             VotingPostForm.VotingPostFormRoute: (context) => VotingPostForm(),
             PostCard.PostCardRoute: (context) => PostCard(),
             ViewPosts.ViewPostsRoute: (context) => ViewPosts(),
-            Favourites.FavourtiesRoute: (context) => Favourites()
+            Favourites.FavourtiesRoute: (context) => Favourites(),
+            '/profileRoute': (dummyCtx) => ViewProfile(),
+            '/savedRoute': (dummyCtx) => Saved(),
+            '/myPostsRoute': (dummyCtx) => MyPosts(),
           },
           title: 'The GUC CC App',
           home: Wrapper()),

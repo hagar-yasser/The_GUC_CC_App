@@ -9,6 +9,7 @@ import 'package:the_guc_cc_app/authorization/Auth.dart';
 import 'package:the_guc_cc_app/homepagefaks.dart';
 import 'package:the_guc_cc_app/objects/MyNames.dart';
 import 'package:the_guc_cc_app/objects/MyUser.dart';
+import './drawer.dart';
 
 class Wrapper extends StatefulWidget {
   static const routeName = '/wrapper';
@@ -45,14 +46,22 @@ class _WrapperState extends State<Wrapper> {
           if (snapshot.connectionState == ConnectionState.active) {
             final MyUser? user = snapshot.data;
             if (user != null) {
+              // print("trsttttesttt");
               print(user.email);
               //ADD HOME PAGE HERE YOU CAN ACCESS THE FULL USER PROFILE FROM THE DATABASE BY
               //GETTING THE USER AUTHENTICATION INFO FROM THE PROVIDER THEN
               //QUERY THE DATABASE FOR THE USER DOCUMENT THAT HAS THIS EMAIL WHERE
               //YOU WILL KNOW THE USER TYPE AND OTHER INFO SUCH AS THE SAVED POSTS IDS SUPPOSEDLY
-              return homepage();
-              // this is the one that will be used !!!!
-              // return ViewPosts();
+              print('returned scaffold in wrapper');
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text('Wrapper'),
+                ),
+                drawer: MainDrawer(),
+                body: Center(
+                  child: ViewPosts(),
+                ),
+              );
             } else {
               print("user from wrapper " + user.toString());
               return Signing();
@@ -61,9 +70,10 @@ class _WrapperState extends State<Wrapper> {
           //WHILE LOADING
           print('circular from wrapper');
           return Scaffold(
+              drawer: MainDrawer(),
               body: Center(
-            child: CircularProgressIndicator(),
-          ));
+                child: CircularProgressIndicator(),
+              ));
         });
   }
 }
